@@ -1,4 +1,4 @@
-A small collection of scripts for initial dataset processing.
+# A small collection of scripts for initial dataset processing.
 
 [wiki](https://github.com/umzi2/PepeDP/wiki)
 ---
