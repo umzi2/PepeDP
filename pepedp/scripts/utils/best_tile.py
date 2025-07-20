@@ -40,7 +40,7 @@ class BestTile:
         process_type: ProcessType = ProcessType.THREAD,
         scale: int = 1,
         dynamic_n_tiles: bool = True,
-        laplacian_thread: float = 0,
+        threshold: float = 0,
         image_gray: bool = False,
         func: BaseComplexity = LaplacianComplexity(),
     ):
@@ -57,7 +57,7 @@ class BestTile:
         self.process_type = process_type
         self.dynamic_n_tiles = dynamic_n_tiles
 
-        self.laplacian_thread = laplacian_thread
+        self.threshold = threshold
         self.image_gray = image_gray
         self.func = func
         if func.type() == "IC9600":
@@ -122,17 +122,15 @@ class BestTile:
                     (img_shape[0] * img_shape[1]) // (self.tile_size**2 * 2)
                 ):
                     tile, laplacian_abs, score = self.get_tile(img, complexity)
-                    if self.laplacian_thread:
-                        if score < self.laplacian_thread:
-                            break
+                    if score < self.threshold:
+                        break
                     self.save_result(
                         tile, ".".join(img_name.split(".")[:-1]) + f"_{i}" + ".png"
                     )
             else:
                 tile, laplacian_abs, score = self.get_tile(img, complexity)
-                if self.laplacian_thread:
-                    if score < self.laplacian_thread:
-                        return
+                if score < self.threshold:
+                    return
                 self.save_result(tile, result_name)
         except Exception as e:
             print(img_name, "\n", e)

@@ -54,8 +54,6 @@ def filtered_pairs(
         j_indices = torch.nonzero(mask).squeeze(1) + (i + 1)
 
         for idx, dist_val in zip(j_indices.tolist(), dists[mask].tolist()):
-            if dist_val <= 0.01:
-                print(dist_val, idx, names[idx], names[i])
             filtered_pairs.append((i, idx, dist_val))
 
     return {

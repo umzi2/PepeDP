@@ -3,12 +3,6 @@ import torch.nn.functional as F
 
 
 def cosine_dist(emb1: torch.Tensor, emb2: torch.Tensor) -> torch.Tensor | float:
-    """
-    Поддерживает сравнение:
-    - [D] и [D]
-    - [1, D] и [1, D]
-    - [N, D] и [M, D] -> [N, M]
-    """
     emb1 = emb1.unsqueeze(0) if emb1.ndim == 1 else emb1  # [D] → [1, D]
     emb2 = emb2.unsqueeze(0) if emb2.ndim == 1 else emb2
 
@@ -26,12 +20,6 @@ def cosine_dist(emb1: torch.Tensor, emb2: torch.Tensor) -> torch.Tensor | float:
 def euclid_dist(
     emb1: torch.Tensor, emb2: torch.Tensor, p: float = 2.0
 ) -> torch.Tensor | float:
-    """
-    Поддерживает сравнение:
-    - [D] и [D]
-    - [1, D] и [1, D]
-    - [N, D] и [M, D] -> [N, M]
-    """
     emb1 = emb1.unsqueeze(0) if emb1.ndim == 1 else emb1  # [D] → [1, D]
     emb2 = emb2.unsqueeze(0) if emb2.ndim == 1 else emb2
 

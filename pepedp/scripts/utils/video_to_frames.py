@@ -13,11 +13,11 @@ class VideoToFrame:
     def __init__(
         self,
         embedder: ImgToEmbedding = ImgToEmbedding(),
-        thread: float = 0.3,
+        threshold: float = 0.3,
         distance_fn=euclid_dist,
     ):
         self.embedder = embedder
-        self.thread = thread
+        self.threshold = threshold
         self.distance_func = distance_fn
 
     def __call__(self, video_path, out_path):
@@ -41,7 +41,7 @@ class VideoToFrame:
                         cv2.cvtColor(frame, cv2.COLOR_BGR2RGB).astype(np.float32)
                         / 255.0
                     )
-                    if self.distance_func(ref, temp_embedd).squ > self.thread:
+                    if self.distance_func(ref, temp_embedd).squeeze() > self.threshold:
                         cv2.imwrite(os.path.join(out_path, f"frame_{n}.png"), frame)
                         ref = temp_embedd
                 n += 1
