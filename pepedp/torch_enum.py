@@ -1,16 +1,16 @@
 from enum import Enum
 from pepedp.scripts.iqa import (
-    HyperThread,
-    AnIQAThread,
-    TopIQThread,
-    BlockinessThread,
-    IC9600Thread,
+    HyperThreshold,
+    AnIQAThreshold,
+    TopIQThreshold,
+    BlockinessThreshold,
+    IC9600Threshold,
 )
 
 
-class ThreadAlg(Enum):
-    HIPERIQA = HyperThread
-    ANIIQA = AnIQAThread
-    TOPIQ = TopIQThread
-    BLOCKINESS = BlockinessThread
-    IC9600 = IC9600Thread
+class ThresholdAlg(Enum):
+    HIPERIQA = HyperThreshold
+    ANIIQA = AnIQAThreshold
+    TOPIQ = TopIQThreshold
+    BLOCKINESS = BlockinessThreshold
+    IC9600 = IC9600Threshold

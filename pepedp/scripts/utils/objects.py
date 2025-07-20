@@ -8,27 +8,27 @@ from .module import ImageDataset
 from tqdm import tqdm
 
 
-class Thread:
-    def __init__(self, name, thread):
+class Threshold:
+    def __init__(self, name, threshold):
         self.name = name
-        self.thread = thread
+        self.threshold = threshold
 
     def __repr__(self):
-        return f"Thread(Name = {self.name}, Thread = {self.thread}\n)"
+        return f"Threshold(Name = {self.name}, Threshold = {self.threshold}\n)"
 
 
-class ThreadList:
+class ThresholdList:
     def __init__(self):
         self.mass = []
 
-    def append(self, thread):
-        self.mass.append(thread)
+    def append(self, threshold):
+        self.mass.append(threshold)
 
-    def extend(self, thread_list):
-        self.mass.extend(thread_list)
+    def extend(self, threshold_list):
+        self.mass.extend(threshold_list)
 
     def sort(self, reverse: bool = False):
-        self.mass.sort(key=lambda item: item.thread, reverse=reverse)
+        self.mass.sort(key=lambda item: item.threshold, reverse=reverse)
 
     def __iter__(self):
         return iter(self.mass)
@@ -45,8 +45,8 @@ class IQANode:
         self,
         img_dir,
         batch_size: int = 8,
-        thread: float = 0.5,
-        median_thread=0,
+        threshold: float = 0.5,
+        median_threshold=0,
         move_folder: str | None = None,
         transform=None,
         reverse=False,
@@ -57,18 +57,18 @@ class IQANode:
         dataset = ImageDataset(img_dir, self.device, transform)
         self.data_loader = DataLoader(dataset, batch_size=batch_size)
         self.img_dir: str = img_dir
-        self.thread = thread
+        self.threshold = threshold
         self.reverse = reverse
         self.move_folder = move_folder
         if move_folder is not None:
             import os
 
             os.makedirs(move_folder, exist_ok=True)
-        if median_thread:
-            self.median_thread = median_thread
-            self.thread_list = ThreadList()
+        if median_threshold:
+            self.median_threshold = median_threshold
+            self.threshold_list = ThresholdList()
         else:
-            self.thread_list = None
+            self.threshold_list = None
 
     def forward(self, images):
         raise NotImplementedError(
@@ -83,37 +83,37 @@ class IQANode:
                 file_name = filenames[index]
                 iqa_value = iqa[index]
 
-                if self.thread_list is None:
-                    if iqa[index] > self.thread and self.move_folder:
+                if self.threshold_list is None:
+                    if iqa[index] > self.threshold and self.move_folder:
                         shutil.move(  # shutil.clone(
                             os.path.join(self.img_dir, file_name),
                             os.path.join(self.move_folder, file_name),
                         )
-                    elif iqa[index] < self.thread and not self.move_folder:
+                    elif iqa[index] < self.threshold and not self.move_folder:
                         os.remove(os.path.join(self.img_dir, file_name))
                 else:
-                    if (iqa[index] > self.thread and not self.reverse) or (
-                        iqa[index] < self.thread and self.reverse
+                    if (iqa[index] > self.threshold and not self.reverse) or (
+                        iqa[index] < self.threshold and self.reverse
                     ):
-                        self.thread_list.append(
-                            Thread(name=file_name, thread=float(iqa_value))
+                        self.threshold_list.append(
+                            Threshold(name=file_name, threshold=float(iqa_value))
                         )
                     else:
                         if not self.move_folder:
                             os.remove(os.path.join(self.img_dir, file_name))
-        if self.thread_list:
-            self.thread_list.sort(self.reverse)
-            clip_index = int(len(self.thread_list) * self.median_thread)
+        if self.threshold_list:
+            self.threshold_list.sort(self.reverse)
+            clip_index = int(len(self.threshold_list) * self.median_threshold)
             if self.move_folder:
-                for thread in self.thread_list[-clip_index:]:
-                    file_name = thread.name
+                for threshold in self.threshold_list[-clip_index:]:
+                    file_name = threshold.name
                     shutil.move(
                         os.path.join(self.img_dir, file_name),
                         os.path.join(self.move_folder, file_name),
                     )
             else:
-                for thread in self.thread_list[:-clip_index]:
-                    file_name = thread.name
+                for threshold in self.threshold_list[:-clip_index]:
+                    file_name = threshold.name
                     shutil.move(
                         os.path.join(self.img_dir, file_name),
                         os.path.join(self.move_folder, file_name),

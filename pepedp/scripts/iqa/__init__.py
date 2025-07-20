@@ -1,13 +1,13 @@
-from .aniqa import AnIQAThread
-from .blocklines_iqa import BlockinessThread
-from .hyper_iqa import HyperThread
-from .topiq import TopIQThread
-from .IC9600_iqa import IC9600Thread
+from .aniqa import AnIQAThreshold
+from .blocklines_iqa import BlockinessThreshold
+from .hyper_iqa import HyperThreshold
+from .topiq import TopIQThreshold
+from .IC9600_iqa import IC9600Threshold
 
 __all__ = [
-    "AnIQAThread",
-    "HyperThread",
-    "TopIQThread",
-    "BlockinessThread",
-    "IC9600Thread",
+    "AnIQAThreshold",
+    "HyperThreshold",
+    "TopIQThreshold",
+    "BlockinessThreshold",
+    "IC9600Threshold",
 ]

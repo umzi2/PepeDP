@@ -3,13 +3,13 @@ from torchvision.transforms import transforms
 from pepedp.scripts.utils.objects import IQANode
 
 
-class AnIQAThread(IQANode):
+class AnIQAThreshold(IQANode):
     def __init__(
         self,
         img_dir,
         batch_size: int = 8,
-        thread: float = 0.5,
-        median_thread=0,
+        threshold: float = 0.5,
+        median_threshold=0,
         move_folder: str | None = None,
     ):
         compose = transforms.Compose(
@@ -20,7 +20,7 @@ class AnIQAThread(IQANode):
             ]
         )
         super().__init__(
-            img_dir, batch_size, thread, median_thread, move_folder, compose
+            img_dir, batch_size, threshold, median_threshold, move_folder, compose
         )
         self.model = torch.hub.load(
             repo_or_dir="miccunifi/ARNIQA",
